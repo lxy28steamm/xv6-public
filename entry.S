@@ -42,6 +42,9 @@ _start = V2P_WO(entry)
 
 # Entering xv6 on boot processor, with paging off.
 .globl entry
+#mark entry
+.global kernel_entry
+kernel_entry = entry 
 #key start...
 entry:
   # Turn on page size extension for 4Mbyte pages

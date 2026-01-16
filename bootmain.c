@@ -14,6 +14,18 @@
 
 void readseg(uchar*, uint, uint);
 
+void 
+print(char *s)
+{
+while(*s){
+	char c = *s ++;
+	if(c == '\n'){
+		vga_pos=((vga_pos/80)+1)*80;
+		continue;
+	}
+	VGA[vga_pos++]=(unsigned short)(0x0700|(unsigned char)c);
+	}
+}
 void
 bootmain(void)
 {
@@ -21,6 +33,7 @@ bootmain(void)
   struct proghdr *ph, *eph;
   void (*entry)(void);
   uchar* pa;
+  print("enter bootmain\n");
 //load elf
   elf = (struct elfhdr*)0x10000;  // scratch space
 
@@ -28,9 +41,10 @@ bootmain(void)
   readseg((uchar*)elf, 4096, 0);
 
   // Is this an ELF executable?
-  if(elf->magic != ELF_MAGIC)
+  if(elf->magic != ELF_MAGIC){
+    print("elf magic mistach\n"); 	  
     return;  // let bootasm.S handle error
-
+  }
   // Load each program segment (ignores ph flags).
   ph = (struct proghdr*)((uchar*)elf + elf->phoff);
   eph = ph + elf->phnum;
@@ -40,7 +54,7 @@ bootmain(void)
     if(ph->memsz > ph->filesz)
       stosb(pa + ph->filesz, 0, ph->memsz - ph->filesz);
   }
-
+print("kernel loaded\n");
   // Call the entry point from the ELF header.
   // Does not return!
   entry = (void(*)(void))(elf->entry);
