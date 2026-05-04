@@ -11,11 +11,10 @@
 #include "memlayout.h"
 
 #define SECTSIZE  512
-
+#define VGA ((unsigned short*)0xB8000)
 void readseg(uchar*, uint, uint);
-
-void 
-print(char *s)
+int vga_pos=0;
+void print(char *s)
 {
 while(*s){
 	char c = *s ++;
