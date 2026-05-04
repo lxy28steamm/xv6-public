@@ -11,9 +11,8 @@
 .globl start
 start:
   cli                         # BIOS enabled interrupts; disable
- 				#guanzhongduan..
+
   # Zero data segment registers DS, ES, and SS.
-#initialize...				
   xorw    %ax,%ax             # Set %ax to zero
   movw    %ax,%ds             # -> Data Segment
   movw    %ax,%es             # -> Extra Segment
